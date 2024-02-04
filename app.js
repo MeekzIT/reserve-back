@@ -26,6 +26,7 @@ const boxRouter = require("./routes/box");
 const itemRouter = require("./routes/item");
 const suportRouter = require("./routes/suport");
 const workerRouter = require("./routes/worker");
+const orderRouter = require("./routes/order");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -50,6 +51,7 @@ app.use("/api/v1/box", boxRouter);
 app.use("/api/v1/item", itemRouter);
 app.use("/api/v1/suport", suportRouter);
 app.use("/api/v1/worker", workerRouter);
+app.use("/api/v1/order", orderRouter);
 
 // getAll()
 

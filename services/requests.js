@@ -3,13 +3,6 @@ const axios = require("axios");
 
 const getAll = async () => {
   try {
-    let currentDate = new Date();
-
-    let year = currentDate.getFullYear();
-    let month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
-    let day = currentDate.getDate().toString().padStart(2, "0");
-    let formattedDate = `${year}-${month}-${day}`;
-
     axios
       .get(`${process.env.SERVER_URL}/devices`)
       .then(async function (response) {
@@ -63,7 +56,19 @@ const getSingle = async (ownerId, active) => {
   }
 };
 
+const setReserve = async (data) => {
+  try {
+    console.log(
+      data,
+      "--------------------- success --------------------------"
+    );
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   getAll,
   getSingle,
+  setReserve,
 };

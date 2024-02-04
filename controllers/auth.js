@@ -151,6 +151,11 @@ const getMe = async (req, res) => {
         where: { id: user_id },
       });
       return res.json({ data: user, super: "owner", succes: true });
+    } else if (role == "worker") {
+      const user = await Worker.findOne({
+        where: { id: user_id },
+      });
+      return res.json({ data: user, super: "worker", succes: true });
     } else {
       const user = await Users.findOne({
         where: { id: user_id },

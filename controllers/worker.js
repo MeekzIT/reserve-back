@@ -3,7 +3,7 @@ const Worker = require("../models").Worker;
 const Owner = require("../models").Owner;
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
-const { generateTimeSlots } = require("../services/worker");
+const { generateTimeSlots, mergeTimeIntervals } = require("../services/worker");
 
 const create = async (req, res) => {
   try {
@@ -35,10 +35,12 @@ const create = async (req, res) => {
         boxId,
         startHour,
         endHour,
-        hours: JSON.stringify(
-          generateTimeSlots(startHour, endHour, box.interval)
-        ),
+        hours: "",
       });
+      worker.hours = JSON.stringify(
+        await generateTimeSlots(startHour, endHour, box.interval, worker.id)
+      );
+      await worker.save();
       return res.json({ succes: true, data: worker });
     }
   } catch (e) {
@@ -66,10 +68,10 @@ const editWorker = async (req, res) => {
 const destroy = async (req, res) => {
   try {
     const { id } = req.body;
-    const worker = await Worker.destroy({
+    await Worker.destroy({
       where: { id },
     });
-    return res.json({ succes: true, data: worker });
+    return res.json({ succes: true });
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -90,14 +92,27 @@ const getWorkers = async (req, res) => {
 const getWorkerHours = async (req, res) => {
   try {
     const { id } = req.query;
-    const workers = await Worker.findOne({
+    const workers = await Worker.findAll({
       where: { boxId: id },
     });
-    return res.json({ succes: true, data: JSON.parse(workers.hours) });
+    const allTimers = [];
+    await Promise.all(
+      await workers.map(async (item) => {
+        console.log(item);
+
+        workerTimer = JSON.parse(item.hours);
+        allTimers.push(...workerTimer);
+      })
+    );
+    return res.json({
+      succes: true,
+      data: mergeTimeIntervals(allTimers),
+    });
   } catch (e) {
     console.log("something went wrong", e);
   }
 };
+
 
 module.exports = {
   create,
