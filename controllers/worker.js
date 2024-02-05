@@ -98,8 +98,6 @@ const getWorkerHours = async (req, res) => {
     const allTimers = [];
     await Promise.all(
       await workers.map(async (item) => {
-        console.log(item);
-
         workerTimer = JSON.parse(item.hours);
         allTimers.push(...workerTimer);
       })
@@ -112,7 +110,6 @@ const getWorkerHours = async (req, res) => {
     console.log("something went wrong", e);
   }
 };
-
 
 module.exports = {
   create,

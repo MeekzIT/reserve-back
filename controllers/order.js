@@ -1,6 +1,8 @@
 const Users = require("../models").User;
 const Order = require("../models").Order;
 const Owner = require("../models").Owner;
+const Boxes = require("../models").Box;
+const Worker = require("../models").Worker;
 const Category = require("../models").Category;
 
 const { Op } = require("sequelize");
@@ -39,7 +41,7 @@ const create = async (req, res) => {
       const dates = await removeWorkerDate(boxId, time);
       newOrder.workerId = dates.id;
       await newOrder.save();
-      const paymentStatus = await setPayment();
+      const paymentStatus = await setPayment(true);
       if (paymentStatus) {
         newOrder.payment = process.env.ORDER__PAYMENT_SUCCESS;
       } else {
@@ -88,6 +90,69 @@ const getOrdersOfWorker = async (req, res) => {
   }
 };
 
+const getOrdersOfUser = async (req, res) => {
+  try {
+    const { user_id } = req.user;
+    const orders = await Order.findAll({
+      where: { userId: user_id },
+    });
+    const allEnterys = [];
+    await Promise.all(
+      await orders.map(async (entery) => {
+        let enteryModes = [];
+        const user = await Users.findOne({
+          where: { id: entery.userId },
+        });
+        const box = await Boxes.findOne({
+          where: { id: entery.boxId },
+        });
+        await Promise.all(
+          await JSON.parse(entery.modes).map(async (i) => {
+            const mode = await Category.findOne({ where: { id: i } });
+            await enteryModes.push(mode.dataValues);
+          })
+        );
+        await allEnterys.push({ ...entery.dataValues, enteryModes, user, box });
+      })
+    );
+
+    return res.json({
+      succes: true,
+      data: allEnterys,
+    });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const getOrderOfUser = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const orders = await Order.findOne({
+      where: { id },
+    });
+    const box = await Boxes.findOne({
+      where: { id: orders.dataValues.boxId },
+    });
+    const worker = await Worker.findOne({
+      where: { id: orders.dataValues.workerId },
+    });
+    let enteryModes = [];
+    await Promise.all(
+      await JSON.parse(orders.modes).map(async (i) => {
+        const mode = await Category.findOne({ where: { id: i } });
+        await enteryModes.push(mode.dataValues);
+      })
+    );
+    return res.json({
+      succes: true,
+      data: { ...orders.dataValues, enteryModes, box, worker },
+    });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const destroyOrder = async (req, res) => {
   try {
     const { id } = req.body;
@@ -107,4 +172,6 @@ module.exports = {
   create,
   getOrdersOfWorker,
   destroyOrder,
+  getOrdersOfUser,
+  getOrderOfUser,
 };

@@ -60,18 +60,41 @@ cron.schedule("0 0 * * *", () => {
   annulWorkerDates();
 });
 
-// catch 404 and forward to error handler
+const io = require("socket.io")(process.env.SOCKET_PORT, {
+  cors: {
+    origin: [
+      process.env.APP_URL,
+      process.env.WORKER_URL,
+      process.env.ADMIN_URL,
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  //connect
+  console.log("user is conected!");
+
+  //new order
+  socket.on("create-order", (data) => {
+    io.emit("get-new-orders", data);
+  });
+
+  //disconnect
+  socket.on("disconnect", () => {
+    console.log("a user is disconnected!");
+  });
+});
+
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.render("error");
 });
