@@ -28,5 +28,16 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Order",
     }
   );
+
+  let ReservePoints = sequelize.define("ReservePoints");
+  let Box = sequelize.define("Box");
+
+  Order.hasOne(ReservePoints, {
+    foreignKey: "id",
+  });
+
+  Order.belongsTo(Box, {
+    foreignKey: "id",
+  });
   return Order;
 };

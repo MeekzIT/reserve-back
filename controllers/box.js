@@ -1,10 +1,11 @@
 const Boxes = require("../models").Box;
 const Item = require("../models").Item;
+const BoxImages = require("../models").BoxImages;
 const { Op } = require("sequelize");
 
 const create = async (req, res) => {
   try {
-    const { name, ownerId, desc, lat, lng, interval } = req.body;
+    const { name, ownerId, desc, lat, lng, interval, timeZone } = req.body;
 
     const box = await Boxes.create({
       name,
@@ -13,6 +14,7 @@ const create = async (req, res) => {
       lat,
       lng,
       interval,
+      timeZone,
     });
 
     return res.json({ succes: true, data: box });
@@ -35,7 +37,7 @@ const destroy = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
-    const { id, name, desc, lat, lng, interval } = req.body;
+    const { id, name, desc, lat, lng, interval, timeZone } = req.body;
 
     const box = await Boxes.findOne({ where: { id } });
     box.name = name;
@@ -43,6 +45,7 @@ const edit = async (req, res) => {
     box.lat = lat;
     box.lng = lng;
     box.interval = interval;
+    box.timeZone = timeZone;
     await box.save();
     return res.json({ succes: true, data: box });
   } catch (e) {
@@ -118,10 +121,43 @@ const getAllBoxes = async (req, res) => {
   }
 };
 
+const createBoxImage = async (req, res) => {
+  try {
+    const { boxId, image } = req.body;
+    const box = await BoxImages.create({ boxId, image });
+    return res.json({ succes: true, data: box });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const destroyBoxImage = async (req, res) => {
+  try {
+    const { id } = req.body;
+    await BoxImages.destroy({ where: { id } });
+    return res.json({ succes: true });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const getBoxImages = async (req, res) => {
+  try {
+    const { boxId } = req.query;
+    const images = await BoxImages.findAll({ where: { boxId } });
+    return res.json({ succes: true, data: images });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   create,
   edit,
   getAllBoxesOfOwners,
   getAllBoxes,
   destroy,
+  createBoxImage,
+  destroyBoxImage,
+  getBoxImages,
 };

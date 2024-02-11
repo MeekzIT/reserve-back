@@ -2,6 +2,7 @@ const Admin = require("../models").Admin;
 const SuperAdmin = require("../models").SuperAdmin;
 const Owner = require("../models").Owner;
 const Users = require("../models").User;
+const Tech = require("../models").Tech;
 const Worker = require("../models").Worker;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -42,6 +43,20 @@ const login = async (req, res) => {
       user.token = token;
       user.save();
       return res.json({ data: user, succes: true });
+    }
+
+    const tech = await Tech.findOne({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (tech && (await bcrypt.compare(password, tech.password))) {
+      const token = jwt.sign(
+        { user_id: tech.id, email, role: tech.role },
+        process.env.TOKEN_KEY_ADMIN
+      );
+      tech.token = token;
+      tech.save();
+      return res.json({ data: tech, succes: true });
     }
 
     const owner = await Owner.findOne({
@@ -93,6 +108,11 @@ const logout = async (req, res) => {
       return res.json({ succes: true });
     } else if (role == "owner") {
       const user = await Owner.findOne({ where: { id: user_id } });
+      user.token = null;
+      await user.save();
+      return res.json({ succes: true });
+    } else if (role == "user") {
+      const user = await Tech.findOne({ where: { id: user_id } });
       user.token = null;
       await user.save();
       return res.json({ succes: true });
@@ -148,6 +168,11 @@ const getMe = async (req, res) => {
       return res.json({ data: user, super: "user", succes: true });
     } else if (role == "owner") {
       const user = await Owner.findOne({
+        where: { id: user_id },
+      });
+      return res.json({ data: user, super: "owner", succes: true });
+    } else if (role == "user") {
+      const user = await Techsedan.findOne({
         where: { id: user_id },
       });
       return res.json({ data: user, super: "owner", succes: true });

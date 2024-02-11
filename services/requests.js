@@ -58,17 +58,36 @@ const getSingle = async (ownerId, active) => {
 
 const setReserve = async (data) => {
   try {
-    console.log(
-      data,
-      "--------------------- success --------------------------"
-    );
+    axios
+      .post(`${process.env.SERVER_URL}/device/reserv`, data)
+      .then((response) => {
+        console.log(
+          response,
+          "--------------------- success --------------------------"
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   } catch (e) {
     console.log("something went wrong", e);
   }
+};
+
+const checkPost = (ownerId) => {
+  return axios
+    .get(`${process.env.SERVER_URL}/money/?id=${ownerId}`)
+    .then((response) => {
+      return response.data[0];
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 module.exports = {
   getAll,
   getSingle,
   setReserve,
+  checkPost,
 };

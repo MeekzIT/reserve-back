@@ -2,33 +2,27 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Boxes", {
+    await queryInterface.createTable("ReservePoints", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
-        type: Sequelize.STRING,
-      },
-      ownerId: {
+      orderId: {
         type: Sequelize.INTEGER,
       },
-      desc: {
+      time: {
         type: Sequelize.STRING,
       },
-      lat: {
+      point: {
         type: Sequelize.STRING,
       },
-      lng: {
-        type: Sequelize.STRING,
+      userId: {
+        type: Sequelize.INTEGER,
       },
-      interval: {
-        type: Sequelize.STRING,
-      },
-      timeZone: {
-        type: Sequelize.STRING,
+      success: {
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +35,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Boxes");
+    await queryInterface.dropTable("ReservePoints");
   },
 };

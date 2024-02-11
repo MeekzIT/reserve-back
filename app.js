@@ -10,7 +10,7 @@ require("dotenv").config();
 var app = express();
 app.use(cors());
 
-const { getAll } = require("./services/requests");
+const { getAll, checkPost } = require("./services/requests");
 const { annulWorkerDates } = require("./services/worker");
 
 const indexRouter = require("./routes/index");
@@ -27,6 +27,8 @@ const itemRouter = require("./routes/item");
 const suportRouter = require("./routes/suport");
 const workerRouter = require("./routes/worker");
 const orderRouter = require("./routes/order");
+const activeOrdersRouter = require("./routes/activeOrders");
+const { getCurrentTimeReserve } = require("./services/activeOrders");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -52,12 +54,19 @@ app.use("/api/v1/item", itemRouter);
 app.use("/api/v1/suport", suportRouter);
 app.use("/api/v1/worker", workerRouter);
 app.use("/api/v1/order", orderRouter);
-
-// getAll()
+app.use("/api/v1/activeOrders", activeOrdersRouter);
 
 cron.schedule("0 0 * * *", () => {
   console.log("Running a task every day at 00:00");
   annulWorkerDates();
+  getAll();
+});
+// getAll();
+
+cron.schedule("*/1 * * * *", async () => {
+  getCurrentTimeReserve();
+
+  console.log("This task runs every minute");
 });
 
 const io = require("socket.io")(process.env.SOCKET_PORT, {

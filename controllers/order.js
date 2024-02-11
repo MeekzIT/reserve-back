@@ -3,11 +3,17 @@ const Order = require("../models").Order;
 const Owner = require("../models").Owner;
 const Boxes = require("../models").Box;
 const Worker = require("../models").Worker;
+const ReservePoints = require("../models").ReservePoints;
 const Category = require("../models").Category;
+const Type = require("../models").Type;
+
 
 const { Op } = require("sequelize");
 const { setReserve } = require("../services/requests");
-const { removeWorkerDate } = require("../services/worker");
+const {
+  removeWorkerDate,
+  subtractIntervalFromDate,
+} = require("../services/worker");
 const { setPayment } = require("../services/payment");
 
 //----------- order statuses ------------//
@@ -35,20 +41,59 @@ const create = async (req, res) => {
       userId: user_id,
       payment: process.env.ORDER_START,
     });
-    if (time == "now") {
-      await setReserve(boxId);
-    } else if (worker) {
-      const dates = await removeWorkerDate(boxId, time);
-      newOrder.workerId = dates.id;
+
+    const paymentStatus = await setPayment(true);
+    if (paymentStatus) {
+      newOrder.payment = process.env.ORDER__PAYMENT_SUCCESS;
       await newOrder.save();
-      const paymentStatus = await setPayment(true);
-      if (paymentStatus) {
-        newOrder.payment = process.env.ORDER__PAYMENT_SUCCESS;
-      } else {
-        newOrder.payment = process.env.ORDER__PAYMENT_FAILD;
+      if (time == "now") {
+        await setReserve({
+          OwnerID: post,
+          Money: price,
+          Reserv: 0,
+        });
       }
+      if (worker) {
+        const dates = await removeWorkerDate(boxId, time);
+        newOrder.workerId = dates.id;
+        await newOrder.save();
+        const box = await Boxes.findOne({
+          where: { id: boxId },
+        });
+        const resetveTime = subtractIntervalFromDate(
+          time,
+          Number(box.interval),
+          Number(box.timeZone.slice(3, box.timeZone.length))
+        );
+        await ReservePoints.create({
+          orderId: newOrder.id,
+          time: resetveTime,
+          userId: user_id,
+          success: false,
+        });
+      }
+    } else {
+      newOrder.payment = process.env.ORDER__PAYMENT_FAILD;
       await newOrder.save();
     }
+    // if (time == "now") {
+    //   await setReserve({
+    //     OwnerID: post,
+    //     Money: price,
+    //     Reserv: 0,
+    //   });
+    // } else if (worker) {
+    //   const dates = await removeWorkerDate(boxId, time);
+    //   newOrder.workerId = dates.id;
+    //   await newOrder.save();
+    //   const paymentStatus = await setPayment(true);
+    //   if (paymentStatus) {
+    //     newOrder.payment = process.env.ORDER__PAYMENT_SUCCESS;
+    //   } else {
+    //     newOrder.payment = process.env.ORDER__PAYMENT_FAILD;
+    //   }
+    //   await newOrder.save();
+    // }
     return res.json({
       succes: true,
       data: newOrder,
@@ -74,7 +119,7 @@ const getOrdersOfWorker = async (req, res) => {
         await Promise.all(
           await JSON.parse(entery.modes).map(async (i) => {
             const mode = await Category.findOne({ where: { id: i } });
-            await enteryModes.push(mode.dataValues);
+            await enteryModes.push(mode);
           })
         );
         await allEnterys.push({ ...entery.dataValues, enteryModes, user });
@@ -109,7 +154,7 @@ const getOrdersOfUser = async (req, res) => {
         await Promise.all(
           await JSON.parse(entery.modes).map(async (i) => {
             const mode = await Category.findOne({ where: { id: i } });
-            await enteryModes.push(mode.dataValues);
+            await enteryModes.push(mode);
           })
         );
         await allEnterys.push({ ...entery.dataValues, enteryModes, user, box });
@@ -140,8 +185,9 @@ const getOrderOfUser = async (req, res) => {
     let enteryModes = [];
     await Promise.all(
       await JSON.parse(orders.modes).map(async (i) => {
-        const mode = await Category.findOne({ where: { id: i } });
-        await enteryModes.push(mode.dataValues);
+        const mode = await Type.findOne({ where: { id: i } });
+        console.log(mode);
+        await enteryModes.push(mode);
       })
     );
     return res.json({

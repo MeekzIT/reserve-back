@@ -55,11 +55,18 @@ const annulWorkerDates = async (req, res) => {
     Promise.all(
       await allWorkers.map(async (item) => {
         const box = await Boxes.findOne({ where: { id: item.boxId } });
+        console.log(item.dataValues, "-=-----");
         await item.update({
-          hours: String(
-            generateTimeSlots(item.startHour, item.endHour, box.interval)
+          hours: JSON.stringify(
+            generateTimeSlots(
+              item.startHour,
+              item.endHour,
+              box.interval,
+              item.dataValues.id
+            )
           ),
         });
+        await item.save();
       })
     );
     console.log(
@@ -91,13 +98,12 @@ const removeWorkerDate = async (boxId, time) => {
       const workerHours = JSON.parse(worker.hours);
       await workerHours.map((entery) => {
         if (entery.start == current.start && entery.access !== false) {
-          console.log(entery.start, current.start);
-
           entery.access = false;
         }
       });
       worker.hours = JSON.stringify(workerHours);
       await worker.save();
+
       return current;
     }
   } catch (e) {
@@ -105,9 +111,24 @@ const removeWorkerDate = async (boxId, time) => {
   }
 };
 
+function subtractIntervalFromDate(timeString, interval, timeZone) {
+  console.log(timeString, interval, timeZone, "timeString, interval, timeZone");
+  const [hours, minutes] = timeString.split(":").map(Number);
+  const totalMinutes = hours * 60 + minutes;
+  const adjustedTime = totalMinutes - interval - timeZone * 60;
+  const resultMinutes = (adjustedTime + 1440) % 1440; // Adding 1440 ensures positive modulo for negative numbers
+  const resultHours = Math.floor(resultMinutes / 60);
+  const resultMinutesPart = resultMinutes % 60;
+  const result = `${(resultHours + 24) % 24}:${resultMinutesPart
+    .toString()
+    .padStart(2, "0")}`;
+  return result;
+}
+
 module.exports = {
   annulWorkerDates,
   generateTimeSlots,
   mergeTimeIntervals,
   removeWorkerDate,
+  subtractIntervalFromDate,
 };

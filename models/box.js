@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       desc: DataTypes.STRING,
       lat: DataTypes.STRING,
       lng: DataTypes.STRING,
-      interval:DataTypes.STRING
+      interval: DataTypes.STRING,
+      timeZone: DataTypes.STRING,
     },
     {
       sequelize,
@@ -27,15 +28,17 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   let Owner = sequelize.define("Owner");
+  let Order = sequelize.define("Order");
+
   let Item = sequelize.define("Item");
 
   Box.belongsTo(Owner, {
     foreignKey: "id",
   });
 
-  // Box.hasMany(Item, {
-  //   foreignKey: "p6",
-  // });
+  Box.hasMany(Order, {
+    foreignKey: "boxId",
+  });
 
   return Box;
 };

@@ -9,4 +9,14 @@ router.post("/destroy", authAdminMiddleWare, boxController.destroy);
 router.get("/", authAdminMiddleWare, boxController.getAllBoxesOfOwners);
 router.get("/boxes", authAdminMiddleWare, boxController.getAllBoxes);
 
+// box images
+
+router.get("/image", authAdminMiddleWare, boxController.getBoxImages);
+router.post("/image", authAdminMiddleWare, boxController.createBoxImage);
+router.post(
+  "/image-destroy",
+  authAdminMiddleWare,
+  boxController.destroyBoxImage
+);
+
 module.exports = router;
