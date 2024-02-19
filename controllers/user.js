@@ -82,8 +82,21 @@ const logout = async (req, res) => {
   }
 };
 
+const getMe = async (req, res) => {
+  try {
+    const { user_id } = req.user;
+    const user = await Users.findOne({
+      where: { id: user_id },
+    });
+    return res.json({ data: user, super: "user", succes: true });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   signUp,
   signIn,
   logout,
+  getMe,
 };

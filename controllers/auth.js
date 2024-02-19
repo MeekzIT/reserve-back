@@ -172,7 +172,7 @@ const getMe = async (req, res) => {
       });
       return res.json({ data: user, super: "owner", succes: true });
     } else if (role == "user") {
-      const user = await Techsedan.findOne({
+      const user = await Tech.findOne({
         where: { id: user_id },
       });
       return res.json({ data: user, super: "owner", succes: true });

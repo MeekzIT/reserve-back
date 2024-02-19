@@ -7,7 +7,6 @@ const ReservePoints = require("../models").ReservePoints;
 const Category = require("../models").Category;
 const Type = require("../models").Type;
 
-
 const { Op } = require("sequelize");
 const { setReserve } = require("../services/requests");
 const {
@@ -70,6 +69,7 @@ const create = async (req, res) => {
           time: resetveTime,
           userId: user_id,
           success: false,
+          point: null,
         });
       }
     } else {

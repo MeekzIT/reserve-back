@@ -3,7 +3,11 @@ const Worker = require("../models").Worker;
 const Owner = require("../models").Owner;
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
-const { generateTimeSlots, mergeTimeIntervals } = require("../services/worker");
+const {
+  generateTimeSlots,
+  mergeTimeIntervals,
+  filterByCurrentHour,
+} = require("../services/worker");
 
 const create = async (req, res) => {
   try {
@@ -95,6 +99,9 @@ const getWorkerHours = async (req, res) => {
     const workers = await Worker.findAll({
       where: { boxId: id },
     });
+    const box = await Boxes.findOne({
+      where: { id },
+    });
     const allTimers = [];
     await Promise.all(
       await workers.map(async (item) => {
@@ -102,9 +109,11 @@ const getWorkerHours = async (req, res) => {
         allTimers.push(...workerTimer);
       })
     );
+    const allWorkerMergedHourse = mergeTimeIntervals(allTimers);
+    const data = filterByCurrentHour(allWorkerMergedHourse, box.interval);
     return res.json({
       succes: true,
-      data: mergeTimeIntervals(allTimers),
+      data,
     });
   } catch (e) {
     console.log("something went wrong", e);

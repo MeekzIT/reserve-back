@@ -116,7 +116,7 @@ function subtractIntervalFromDate(timeString, interval, timeZone) {
   const [hours, minutes] = timeString.split(":").map(Number);
   const totalMinutes = hours * 60 + minutes;
   const adjustedTime = totalMinutes - interval - timeZone * 60;
-  const resultMinutes = (adjustedTime + 1440) % 1440; // Adding 1440 ensures positive modulo for negative numbers
+  const resultMinutes = (adjustedTime + 1440) % 1440;
   const resultHours = Math.floor(resultMinutes / 60);
   const resultMinutesPart = resultMinutes % 60;
   const result = `${(resultHours + 24) % 24}:${resultMinutesPart
@@ -125,10 +125,24 @@ function subtractIntervalFromDate(timeString, interval, timeZone) {
   return result;
 }
 
+function filterByCurrentHour(arr, interval) {
+  const currentTime = new Date();
+  const endTimeThreshold = new Date(
+    currentTime.getTime() + 2 * interval * 60000
+  );
+
+  return arr.filter((item) => {
+    const itemEndTime = new Date(currentTime.toDateString() + " " + item.end);
+    console.log(itemEndTime, item.end, "111");
+    return itemEndTime > endTimeThreshold;
+  });
+}
+
 module.exports = {
   annulWorkerDates,
   generateTimeSlots,
   mergeTimeIntervals,
   removeWorkerDate,
   subtractIntervalFromDate,
+  filterByCurrentHour,
 };

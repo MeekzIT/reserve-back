@@ -15,7 +15,7 @@ function getCurrentTimeInGMT() {
 
 const getCurrentTimeReserve = async (req, res) => {
   try {
-    const actives = await ReservePoints.findAll();
+    const actives = await ReservePoints.findAll({ where: { point: null } });
     const data = [];
     const posts = [];
     const currentTime = getCurrentTimeInGMT();
@@ -40,7 +40,6 @@ const getCurrentTimeReserve = async (req, res) => {
         await Promise.all(
           await items.map(async (entery) => {
             const active = await checkPost(entery.dataValues.p2);
-            console.log(active, "activeactiveactive");
             if (active.money == 0 || active.money < reservedMoney) {
               reservedPost = active.ownerid;
               reservedMoney = active.money;
