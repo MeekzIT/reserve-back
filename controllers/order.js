@@ -154,7 +154,7 @@ const getOrdersOfUser = async (req, res) => {
         await Promise.all(
           await JSON.parse(entery.modes).map(async (i) => {
             const mode = await Category.findOne({ where: { id: i } });
-            await enteryModes.push(mode);
+                        await enteryModes.push(mode);
           })
         );
         await allEnterys.push({ ...entery.dataValues, enteryModes, user, box });
@@ -183,9 +183,9 @@ const getOrderOfUser = async (req, res) => {
       where: { id: orders.dataValues.workerId },
     });
     let enteryModes = [];
-    await Promise.all(
+        await Promise.all(
       await JSON.parse(orders.modes).map(async (i) => {
-        const mode = await Type.findOne({ where: { id: i } });
+        const mode = await Category.findOne({ where: { id: i } });
         console.log(mode);
         await enteryModes.push(mode);
       })
@@ -193,7 +193,7 @@ const getOrderOfUser = async (req, res) => {
     return res.json({
       succes: true,
       data: { ...orders.dataValues, enteryModes, box, worker },
-    });
+          });
   } catch (e) {
     console.log("something went wrong", e);
   }

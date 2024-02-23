@@ -110,7 +110,11 @@ const getWorkerHours = async (req, res) => {
       })
     );
     const allWorkerMergedHourse = mergeTimeIntervals(allTimers);
-    const data = filterByCurrentHour(allWorkerMergedHourse, box.interval);
+    const data = filterByCurrentHour(
+      allWorkerMergedHourse,
+      box.interval,
+      box.timeZone
+    );
     return res.json({
       succes: true,
       data,

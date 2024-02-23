@@ -125,15 +125,28 @@ function subtractIntervalFromDate(timeString, interval, timeZone) {
   return result;
 }
 
-function filterByCurrentHour(arr, interval) {
+function filterByCurrentHour(arr, interval, timeZone) {
   const currentTime = new Date();
+
+  // Adjust the current time to the specified time zone
+  const timeZoneOffset = new Date()
+    .toLocaleTimeString("en-us", { timeZoneName: "short", timeZone: timeZone })
+    .split(" ")[2];
+  currentTime.setMinutes(
+    currentTime.getMinutes() + parseInt(timeZoneOffset, 10)
+  );
+
   const endTimeThreshold = new Date(
     currentTime.getTime() + 2 * interval * 60000
   );
 
   return arr.filter((item) => {
+    // Adjust the item's end time to the specified time zone
     const itemEndTime = new Date(currentTime.toDateString() + " " + item.end);
-    console.log(itemEndTime, item.end, "111");
+    itemEndTime.setMinutes(
+      itemEndTime.getMinutes() + parseInt(timeZoneOffset, 10)
+    );
+
     return itemEndTime > endTimeThreshold;
   });
 }
