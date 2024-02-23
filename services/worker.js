@@ -1,5 +1,6 @@
 const Worker = require("../models").Worker;
 const Boxes = require("../models").Box;
+const { DateTime } = require("luxon");
 
 function formatTime(time) {
   return time < 10 ? `0${time}` : `${time}`;
@@ -125,28 +126,15 @@ function subtractIntervalFromDate(timeString, interval, timeZone) {
   return result;
 }
 
-function filterByCurrentHour(arr, interval, timeZone) {
+function filterByCurrentHour(arr, interval) {
   const currentTime = new Date();
-
-  // Adjust the current time to the specified time zone
-  const timeZoneOffset = new Date()
-    .toLocaleTimeString("en-us", { timeZoneName: "short", timeZone: timeZone })
-    .split(" ")[2];
-  currentTime.setMinutes(
-    currentTime.getMinutes() + parseInt(timeZoneOffset, 10)
-  );
-
   const endTimeThreshold = new Date(
     currentTime.getTime() + 2 * interval * 60000
   );
 
   return arr.filter((item) => {
-    // Adjust the item's end time to the specified time zone
     const itemEndTime = new Date(currentTime.toDateString() + " " + item.end);
-    itemEndTime.setMinutes(
-      itemEndTime.getMinutes() + parseInt(timeZoneOffset, 10)
-    );
-
+    console.log(itemEndTime, item.end, "111");
     return itemEndTime > endTimeThreshold;
   });
 }
