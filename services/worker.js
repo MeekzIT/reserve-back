@@ -1,6 +1,5 @@
 const Worker = require("../models").Worker;
 const Boxes = require("../models").Box;
-const { DateTime } = require("luxon");
 
 function formatTime(time) {
   return time < 10 ? `0${time}` : `${time}`;
