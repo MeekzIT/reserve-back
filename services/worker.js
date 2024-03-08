@@ -112,19 +112,17 @@ const removeWorkerDate = async (boxId, time) => {
 };
 
 function subtractIntervalFromDate(timeString, interval, timeZone) {
-  console.log(timeString, interval, timeZone, "timeString, interval, timeZone");
   const [hours, minutes] = timeString.split(":").map(Number);
   const totalMinutes = hours * 60 + minutes;
   const adjustedTime = totalMinutes - interval - timeZone * 60;
   const resultMinutes = (adjustedTime + 1440) % 1440;
   const resultHours = Math.floor(resultMinutes / 60);
   const resultMinutesPart = resultMinutes % 60;
-  const result = `${(resultHours + 24) % 24}:${resultMinutesPart
+  const result = `${resultHours.toString().padStart(2, "0")}:${resultMinutesPart
     .toString()
     .padStart(2, "0")}`;
   return result;
 }
-
 function filterByCurrentHour(arr, interval) {
   const currentTime = new Date();
   const endTimeThreshold = new Date(
