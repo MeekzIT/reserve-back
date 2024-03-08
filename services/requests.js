@@ -78,7 +78,6 @@ const checkPost = (ownerId) => {
   return axios
     .get(`${process.env.SERVER_URL}/money/?id=${ownerId}`)
     .then((response) => {
-      console.log(response.data[0],"ppppppp----------------");
       return response.data[0];
     })
     .catch((error) => {

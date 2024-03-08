@@ -41,10 +41,13 @@ const getCurrentTimeReserve = async (req, res) => {
           await items.map(async (entery) => {
             const active = await checkPost(entery.dataValues.p2);
             console.log(active, "--------------");
-            if (active.money == 0 || active.money < reservedMoney) {
-              reservedPost = active.ownerid;
-              reservedMoney = active.money;
-              posts.push(entery.dataValues);
+            await Promise.all();
+            if (await active) {
+              if (active.money == 0 || active.money < reservedMoney) {
+                reservedPost = active.ownerid;
+                reservedMoney = active.money;
+                posts.push(entery.dataValues);
+              }
             }
           })
         );
