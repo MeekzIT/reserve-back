@@ -39,10 +39,15 @@ const getCurrentTimeReserve = async (req, res) => {
         let reservedPost = null;
         await Promise.all(
           await items.map(async (entery) => {
+            console.log(
+              reservedMoney,
+              reservedPost,
+              " reservedPost        asodugaso"
+            );
+
             const active = await checkPost(entery.dataValues.p2);
-            console.log(active, "--------------");
-            await Promise.all();
-            if (await active) {
+            if (active !== undefined) {
+              console.log(active, "------------active------------");
               if (active.money == 0 || active.money < reservedMoney) {
                 reservedPost = active.ownerid;
                 reservedMoney = active.money;
@@ -51,6 +56,7 @@ const getCurrentTimeReserve = async (req, res) => {
             }
           })
         );
+
         setReserve({
           OwnerID: reservedPost,
           Reserv: 1,
