@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       modes: DataTypes.STRING,
       time: DataTypes.STRING,
       payment: DataTypes.STRING,
+      orderId:DataTypes.STRING,
     },
     {
       sequelize,

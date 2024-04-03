@@ -131,7 +131,6 @@ function filterByCurrentHour(arr, interval) {
 
   return arr.filter((item) => {
     const itemEndTime = new Date(currentTime.toDateString() + " " + item.end);
-    console.log(itemEndTime, item.end, "111");
     return itemEndTime > endTimeThreshold;
   });
 }

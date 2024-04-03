@@ -4,6 +4,11 @@ const orderController = require("../controllers/order");
 const authAdminMiddleWare = require("../middlewares/adminAuthMiddleware");
 
 router.post("/", authAdminMiddleWare, orderController.create);
+router.post(
+  "/registrate",
+  authAdminMiddleWare,
+  orderController.registratedOrder
+);
 router.post("/destroy", orderController.destroyOrder);
 router.get(
   "/user-orders",
