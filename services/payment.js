@@ -10,7 +10,7 @@ const setPayment = (price, id) => {
 				currency: "051",
 				language: "hy",
 				orderNumber: id,
-				returnUrl: "http://localhost:5173/result",
+				returnUrl: "https://reserve-app-one.vercel.app/result",
 				pageView: "MOBILE",
 			},
 		})
