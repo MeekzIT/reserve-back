@@ -10,7 +10,7 @@ const setPayment = (price, id) => {
 				currency: "051",
 				language: "hy",
 				orderNumber: id,
-				returnUrl: "https://reserve-app-one.vercel.app/result",
+				returnUrl: "https://reserve.jsxmachines.com/result",
 				pageView: "MOBILE",
 			},
 		})

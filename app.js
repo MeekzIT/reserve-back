@@ -8,10 +8,10 @@ const cors = require("cors")
 require("dotenv").config()
 
 var app = express()
-app.use(cors())
 
 const { getAll, checkPost } = require("./services/requests")
 const { annulWorkerDates } = require("./services/worker")
+app.use(cors())
 
 const indexRouter = require("./routes/index")
 const authRouter = require("./routes/auth")
