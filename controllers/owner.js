@@ -6,14 +6,15 @@ const bcrypt = require("bcryptjs");
 const create = async (req, res) => {
   try {
     const {
-      firstName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      countryId,
-      userId,
-    } = req.body;
+			firstName,
+			lastName,
+			email,
+			password,
+			phoneNumber,
+			countryId,
+			userId,
+			deviceOwner,
+		} = req.body
     const oldUser = await Owner.findOne({
       where: { email, role: "owner" },
     });
@@ -30,6 +31,7 @@ const create = async (req, res) => {
         subscribe: false,
         countryId,
         role: "owner",
+        deviceOwner,
         userId,
       });
       const user = await Owner.findOne({
