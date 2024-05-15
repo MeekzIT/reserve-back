@@ -15,8 +15,8 @@ const setPayment = (price, id) => {
 			},
 		})
 		.then(function (response) {
+			console.log(response.data, "response.data")
 			if (response.data.errorCode == 0) {
-				console.log(response.data, "response.data")
 				return {
 					succes: true,
 					data: response.data.formUrl,
