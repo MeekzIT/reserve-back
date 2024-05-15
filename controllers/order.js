@@ -145,7 +145,7 @@ const getOrdersOfUser = async (req, res) => {
 		const { user_id } = req.user
 		const orders = await Order.findAll({
 			where: { userId: user_id },
-			order: [["createdAt", "ASC"]],
+			order: [["created_at", "DESC"]],
 		})
 		const allEnterys = []
 		await Promise.all(
