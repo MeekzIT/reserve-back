@@ -57,10 +57,10 @@ app.use("/api/v1/order", orderRouter)
 app.use("/api/v1/activeOrders", activeOrdersRouter)
 
 cron.schedule("0 0 * * *", () => {
-	console.log("Running a task every day at 00:00")
+	getAll()
 	annulWorkerDates()
+	console.log("Running a task every day at 00:00")
 })
-// getAll()
 
 cron.schedule("*/1 * * * *", async () => {
 	getCurrentTimeReserve()
