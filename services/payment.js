@@ -9,7 +9,7 @@ const setPayment = (price, id) => {
 				amount: price,
 				currency: "051",
 				language: "hy",
-				orderNumber: id,
+				orderNumber: Number(id) + 99,
 				returnUrl: "https://reserve.jsxmachines.com/result",
 				pageView: "MOBILE",
 			},
