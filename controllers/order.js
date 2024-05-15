@@ -145,6 +145,7 @@ const getOrdersOfUser = async (req, res) => {
 		const { user_id } = req.user
 		const orders = await Order.findAll({
 			where: { userId: user_id },
+			order: [["createdAt", "DESC"]],
 		})
 		const allEnterys = []
 		await Promise.all(
@@ -191,7 +192,6 @@ const getOrderOfUser = async (req, res) => {
 		await Promise.all(
 			await JSON.parse(orders.modes).map(async i => {
 				const mode = await Category.findOne({ where: { id: i } })
-				console.log(mode)
 				await enteryModes.push(mode)
 			})
 		)
