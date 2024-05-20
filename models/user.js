@@ -12,21 +12,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init(
-    {
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      token: DataTypes.STRING,
-      countryId: DataTypes.INTEGER,
-      role: DataTypes.STRING,
-      phoneNumber: DataTypes.STRING,
-    },
-    {
-      sequelize,
-      modelName: "User",
-    }
-  );
+		{
+			firstName: DataTypes.STRING,
+			lastName: DataTypes.STRING,
+			email: DataTypes.STRING,
+			password: DataTypes.STRING,
+			token: DataTypes.STRING,
+			countryId: DataTypes.INTEGER,
+			role: DataTypes.STRING,
+			phoneNumber: DataTypes.STRING,
+			activity: DataTypes.BOOLEAN,
+		},
+		{
+			sequelize,
+			modelName: "User",
+		}
+	)
 
   let Country = sequelize.define("Country");
   let Suport = sequelize.define("Suport");
