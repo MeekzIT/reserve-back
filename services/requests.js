@@ -1,5 +1,6 @@
 const Item = require("../models").Item
 const axios = require("axios")
+const { Op } = require("sequelize")
 
 const getAll = async () => {
 	try {

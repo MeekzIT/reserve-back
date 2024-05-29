@@ -27,6 +27,7 @@ const itemRouter = require("./routes/item")
 const suportRouter = require("./routes/suport")
 const workerRouter = require("./routes/worker")
 const orderRouter = require("./routes/order")
+const statisticsRouter = require("./routes/statistics")
 const activeOrdersRouter = require("./routes/activeOrders")
 const { getCurrentTimeReserve } = require("./services/activeOrders")
 
@@ -54,6 +55,7 @@ app.use("/api/v1/item", itemRouter)
 app.use("/api/v1/suport", suportRouter)
 app.use("/api/v1/worker", workerRouter)
 app.use("/api/v1/order", orderRouter)
+app.use("/api/v1/statistics", statisticsRouter)
 app.use("/api/v1/activeOrders", activeOrdersRouter)
 
 cron.schedule("0 0 * * *", () => {
@@ -61,6 +63,7 @@ cron.schedule("0 0 * * *", () => {
 	annulWorkerDates()
 	console.log("Running a task every day at 00:00")
 })
+// getAll()prpur
 
 cron.schedule("*/1 * * * *", async () => {
 	getCurrentTimeReserve()
