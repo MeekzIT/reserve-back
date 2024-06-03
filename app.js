@@ -63,7 +63,7 @@ cron.schedule("0 0 * * *", () => {
 	annulWorkerDates()
 	console.log("Running a task every day at 00:00")
 })
-// getAll()prpur
+// getAll()
 
 cron.schedule("*/1 * * * *", async () => {
 	getCurrentTimeReserve()
