@@ -7,10 +7,6 @@ const getAll = async () => {
 		axios
 			.get(`${process.env.SERVER_URL}/devices`)
 			.then(async function (response) {
-				// await Item.destroy({
-				//   where: {},
-				//   truncate: true,
-				// });
 				await response.data.map(async item => {
 					const entery = await Item.findOne({
 						where: {
@@ -20,18 +16,12 @@ const getAll = async () => {
 						},
 					})
 					if (entery) {
-						entery.update({ ...item })
+						entery.datatime = item.datatime
+						await entery.save()
+						// entery.update({ ...item })
 					} else {
 						await Item.create({ ...item, access: true })
 					}
-					// await Item.create({
-					//   p0: item.p0,
-					//   name: item.name,
-					//   p2: item.p2, // ownerId
-					//   p5: item.p5, // moikaID
-					//   datatime: item.datatime,
-					//   access: true,
-					// });
 					console.log("--------------------- ready --------------------------")
 				})
 			})
