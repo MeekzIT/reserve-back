@@ -17,6 +17,7 @@ router.post("/add-type", authAdminMiddleWare, itemController.addType)
 router.post("/edit-type", authAdminMiddleWare, itemController.editItemType)
 router.post("/destroy-type", authAdminMiddleWare, itemController.destroyType)
 router.get("/type", authAdminMiddleWare, itemController.getItemType)
-router.get("/box-type", authAdminMiddleWare, itemController.getBoxType)
+//yandex
+router.get("/box-type", itemController.getBoxType)
 
 module.exports = router

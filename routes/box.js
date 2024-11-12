@@ -7,11 +7,13 @@ router.post("/", authAdminMiddleWare, boxController.create);
 router.post("/edit", authAdminMiddleWare, boxController.edit);
 router.post("/destroy", authAdminMiddleWare, boxController.destroy);
 router.get("/", authAdminMiddleWare, boxController.getAllBoxesOfOwners);
-router.get("/boxes", authAdminMiddleWare, boxController.getAllBoxes);
+//yandex
+router.get("/boxes", boxController.getAllBoxes);
 
 // box images
 
-router.get("/image", authAdminMiddleWare, boxController.getBoxImages);
+//yandex
+router.get("/image", boxController.getBoxImages);
 router.post("/image", authAdminMiddleWare, boxController.createBoxImage);
 router.post(
   "/image-destroy",
