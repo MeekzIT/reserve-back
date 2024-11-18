@@ -18,7 +18,7 @@ const login = async (req, res) => {
       const newApiKey = uuidv4();
       existedUser.apiKey = newApiKey;
       await existedUser.save();
-      return res.json({ succes: true, apiKey });
+      return res.json({ succes: true, apiKey: newApiKey });
     } else {
       const newApiKey = uuidv4();
       await YandexUser.create({ user, apiKey: newApiKey });
