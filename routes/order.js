@@ -21,4 +21,6 @@ router.get(
   authAdminMiddleWare,
   orderController.getOrdersOfWorker
 );
+router.post("/yandex/order", orderController.yandexOrder);
+
 module.exports = router;

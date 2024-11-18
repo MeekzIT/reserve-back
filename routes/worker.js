@@ -7,6 +7,7 @@ router.post("/", workerController.create);
 router.post("/destroy", authMiddleWare, workerController.destroy);
 router.post("/edit", authMiddleWare, workerController.editWorker);
 router.get("/", authMiddleWare, workerController.getWorkers);
-router.get("/hour", workerController.getWorkerHours);
+router.get("/hour", authMiddleWare, workerController.getWorkerHours);
+router.get("/yandex/hour", workerController.getWorkerHoursYandex);
 
 module.exports = router;

@@ -22,7 +22,6 @@ const getCurrentTimeReserve = async (req, res) => {
 		console.log(currentTime, "------")
 		await Promise.all(
 			actives.map(i => {
-				// if (currentTime == currentTime) {
 				if (i.time == currentTime) {
 					data.push(i.dataValues)
 				}
