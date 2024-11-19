@@ -218,7 +218,8 @@ const destroyOrder = async (req, res) => {
 
 const yandexOrder = async (req, res) => {
   try {
-    const { post, price, apiKey } = req.body;
+    const { post, price } = req.body;
+    const apiKey = req.headers.apiKey;
     const haveApiKey = await yandexMiddlware(apiKey);
     if (!haveApiKey) {
       return res.json({

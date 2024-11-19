@@ -22,7 +22,7 @@ const login = async (req, res) => {
     } else {
       const newApiKey = uuidv4();
       await YandexUser.create({ user, apiKey: newApiKey });
-      return res.json({ succes: true, apiKey });
+      return res.json({ succes: true, apiKey: newApiKey });
     }
   } catch (e) {
     console.log("something went wrong", e);

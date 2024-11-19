@@ -173,7 +173,8 @@ const getBoxType = async (req, res) => {
 
 const getBoxTypeYandex = async (req, res) => {
   try {
-    const { ownerId, boxId, apiKey } = req.query;
+    const { ownerId, boxId } = req.query;
+    const apiKey = req.headers.apiKey;
     const haveApiKey = await yandexMiddlware(apiKey);
     if (!haveApiKey) {
       return res.json({

@@ -127,7 +127,8 @@ const getWorkerHours = async (req, res) => {
 
 const getWorkerHoursYandex = async (req, res) => {
   try {
-    const { id, apiKey } = req.query;
+    const { id } = req.query;
+    const apiKey = req.headers.apiKey;
     const haveApiKey = await yandexMiddlware(apiKey);
     if (!haveApiKey) {
       return res.json({

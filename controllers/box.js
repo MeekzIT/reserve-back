@@ -167,7 +167,8 @@ const getAllBoxes = async (req, res) => {
 
 const getAllBoxesYandex = async (req, res) => {
   try {
-    const { id, apiKey } = req.query;
+    const { id } = req.query;
+    const apiKey = req.headers.apiKey;
     const haveApiKey = await yandexMiddlware(apiKey);
     if (!haveApiKey) {
       return res.json({
@@ -233,7 +234,8 @@ const getBoxImages = async (req, res) => {
 
 const getBoxImagesYandex = async (req, res) => {
   try {
-    const { boxId, apiKey } = req.query;
+    const { boxId } = req.query;
+    const apiKey = req.headers.apiKey;
     const haveApiKey = await yandexMiddlware(apiKey);
     if (!haveApiKey) {
       return res.json({
