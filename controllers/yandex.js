@@ -9,7 +9,7 @@ const login = async (req, res) => {
       email !== "yandex" &&
       password !== "yandex-integration-test-env"
     ) {
-      return res.json({
+      return res.status(400).json({
         error: ["Password and email are required fields"],
       });
     }
@@ -33,7 +33,7 @@ const logout = async (req, res) => {
   try {
     const { user } = req.body;
     if (!user) {
-      return res.json({
+      return res.status(400).json({
         error: ["user are required field"],
       });
     }
@@ -42,7 +42,7 @@ const logout = async (req, res) => {
       existedUser.destroy();
       return res.json({ succes: true, apiKey });
     } else {
-      return res.json({
+      return res.status(400).json({
         error: ["user are not valid"],
       });
     }

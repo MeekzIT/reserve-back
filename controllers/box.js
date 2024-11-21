@@ -170,7 +170,7 @@ const getAllBoxesYandex = async (req, res) => {
     const { id } = req.query;
     const haveApiKey = await yandexMiddlware(req.headers.apikey);
     if (!haveApiKey) {
-      return res.json({
+      return res.status(400).json({
         error: ["apiKey are not valid"],
       });
     }
