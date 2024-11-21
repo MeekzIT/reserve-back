@@ -20,5 +20,6 @@ router.get("/type", authAdminMiddleWare, itemController.getItemType);
 //yandex
 router.get("/box-type", authAdminMiddleWare, itemController.getBoxType);
 router.get("/yandex/box-type", itemController.getBoxTypeYandex);
+router.get("/yandex/item-access", itemController.getItemAccessYandex);
 
 module.exports = router;

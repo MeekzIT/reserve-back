@@ -9,6 +9,7 @@ const Item = require("../models").Item;
 const ItemModes = require("../models").ItemModes;
 const ItemTypes = require("../models").ItemTypes;
 const { Op } = require("sequelize");
+const { checkPost } = require("../services/requests");
 
 const edit = async (req, res) => {
   try {
@@ -205,6 +206,25 @@ const getBoxTypeYandex = async (req, res) => {
   }
 };
 
+const getItemAccessYandex = async (req, res) => {
+  try {
+    const { postId } = req.query;
+    const haveApiKey = await yandexMiddlware(req.headers.apikey);
+    if (!haveApiKey) {
+      return res.json({
+        error: ["apiKey are not valid"],
+      });
+    }
+    const active = await checkPost(postId);
+    return res.json({
+      succes: true,
+      data: active,
+    });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const editItemType = async (req, res) => {
   try {
     const { id, price } = req.body;
@@ -234,4 +254,5 @@ module.exports = {
   getBoxType,
   editItemType,
   getBoxTypeYandex,
+  getItemAccessYandex,
 };
