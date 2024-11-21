@@ -219,8 +219,7 @@ const destroyOrder = async (req, res) => {
 const yandexOrder = async (req, res) => {
   try {
     const { post, price } = req.body;
-    const apiKey = req.headers.apiKey;
-    const haveApiKey = await yandexMiddlware(apiKey);
+    const haveApiKey = await yandexMiddlware(req.headers.apikey);
     if (!haveApiKey) {
       return res.json({
         error: ["apiKey are not valid"],
