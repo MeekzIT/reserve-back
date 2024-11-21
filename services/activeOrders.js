@@ -19,7 +19,6 @@ const getCurrentTimeReserve = async (req, res) => {
 		const data = []
 		const posts = []
 		const currentTime = getCurrentTimeInGMT()
-		console.log(currentTime, "------")
 		await Promise.all(
 			actives.map(i => {
 				if (i.time == currentTime) {

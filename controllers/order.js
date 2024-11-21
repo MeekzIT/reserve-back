@@ -6,9 +6,11 @@ const Worker = require("../models").Worker;
 const ReservePoints = require("../models").ReservePoints;
 const Category = require("../models").Category;
 const Type = require("../models").Type;
-
+const YandexOrder = require("../models").YandexOrder;
 const { Op } = require("sequelize");
 const { setReserve } = require("../services/requests");
+const { v6: uuidv6 } = require("uuid");
+
 const {
   removeWorkerDate,
   subtractIntervalFromDate,
@@ -216,7 +218,19 @@ const destroyOrder = async (req, res) => {
   }
 };
 
-const yandexOrder = async (req, res) => {
+function getCurrentTimeGMT() {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = String(now.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const day = String(now.getUTCDate()).padStart(2, "0");
+  const hours = String(now.getUTCHours()).padStart(2, "0");
+  const minutes = String(now.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(now.getUTCSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+const yandexOrderCreate = async (req, res) => {
   try {
     const { post, price } = req.body;
     const haveApiKey = await yandexMiddlware(req.headers.apikey);
@@ -225,14 +239,20 @@ const yandexOrder = async (req, res) => {
         error: ["apiKey are not valid"],
       });
     }
+    const newOrder = await YandexOrder.create({
+      postId: post,
+      price: price,
+      orderId: uuidv6(),
+      time: getCurrentTimeGMT(),
+    });
     await setReserve({
       OwnerID: post,
       Money: price,
       Reserv: 0,
     });
-
     return res.json({
       succes: true,
+      data: newOrder,
     });
   } catch (e) {
     console.log("something went wrong", e);
@@ -246,5 +266,5 @@ module.exports = {
   destroyOrder,
   getOrdersOfUser,
   getOrderOfUser,
-  yandexOrder,
+  yandexOrderCreate,
 };
