@@ -168,9 +168,9 @@ const getAllBoxes = async (req, res) => {
 const getAllBoxesYandex = async (req, res) => {
   try {
     const { id } = req.query;
-    const apiKey = req.headers.apiKey;
+    const apiKey = req.headers.apikey;
 
-    const haveApiKey = await yandexMiddlware(apiKey);
+    const haveApiKey = await yandexMiddlware(req.headers.apikey);
     console.log(req.headers.apikey, apiKey, haveApiKey, "--------------------");
     if (!haveApiKey) {
       return res.json({
