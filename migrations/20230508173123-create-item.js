@@ -15,6 +15,7 @@ module.exports = {
       p5: Sequelize.INTEGER, // 1-moyka, 2-cux
       name: Sequelize.STRING,
       datatime: Sequelize.STRING,
+      postIndex: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

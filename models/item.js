@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       p2: DataTypes.STRING, // ownerId
       p5: DataTypes.INTEGER, // moikaID
       datatime: DataTypes.STRING,
+      postIndex: DataTypes.STRING,
     },
     {
       sequelize,
