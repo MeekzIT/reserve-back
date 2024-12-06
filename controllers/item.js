@@ -13,9 +13,9 @@ const { checkPost } = require("../services/requests");
 
 const edit = async (req, res) => {
   try {
-    const { id, name, access, itemsId } = req.body;
+    const { id, postIndex, access, itemsId } = req.body;
     const box = await Item.findOne({ where: { p2: id } });
-    box.name = name;
+    box.postIndex = postIndex;
     box.access = access;
     box.p5 = itemsId;
     await box.save();
